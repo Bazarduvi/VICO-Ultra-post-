@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>WP Ultrapost · DUVI</title>
+<link rel="manifest" href="./manifest.json"/>
+<meta name="theme-color" content="#0ea5e9"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="WP Ultrapost DUVI"/>
+<link rel="apple-touch-icon" href="./icon.png"/>
+<link rel="icon" type="image/png" href="./icon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#020617;--bg2:#0a1628;--bg3:#0f1e35;--gl:rgba(14,165,233,.05);
+  --bo:rgba(14,165,233,.12);--bo2:rgba(14,165,233,.2);
+  --tx:#e2e8f0;--tx2:#94a3b8;--tx3:#4a5568;
+  --ac:#0ea5e9;--ac2:#0284c7;--ac3:#38bdf8;
+  --pu:#8b5cf6;--gr:#22c55e;--am:#f59e0b;--rd:#ef4444;--pi:#ec4899;
+  --glow:0 0 24px rgba(14,165,233,.3);
+  --fn:'Syne',sans-serif;--fb:'DM Sans',sans-serif;--fm:'JetBrains Mono',monospace;
+  --r:10px;--rsm:6px;--rlg:16px;
+  --topbar:60px;
+}
+[data-theme="light"]{
+  --bg:#f0f5fa;--bg2:#ffffff;--bg3:#e4ecf4;--gl:rgba(14,165,233,.04);
+  --bo:rgba(14,165,233,.15);--bo2:rgba(14,165,233,.25);
+  --tx:#0f172a;--tx2:#475569;--tx3:#94a3b8;
+}
+html,body{height:100%;overflow:hidden;font-family:var(--fb);background:var(--bg);color:var(--tx)}
+/* ── TOPBAR ── */
+#topbar{height:var(--topbar);flex-shrink:0;background:var(--bg2);border-bottom:1px solid var(--bo);
+  display:flex;align-items:center;padding:0 16px;gap:10px;z-index:100;position:sticky;top:0}
+#app{display:flex;flex-direction:column;height:100dvh}
+#tb-logo{display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0}
+#tb-logo svg{width:32px;height:32px;flex-shrink:0}
+#tb-logo-text{font-family:var(--fn);font-weight:800;font-size:.88rem;line-height:1.1;color:var(--tx)}
+#tb-logo-text span{display:block;font-size:.5rem;color:var(--ac);font-family:var(--fm);letter-spacing:.1em}
+#tb-flex{flex:1}
+/* Pomodoro in topbar */
+#tb-pom{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--bo);
+  border-radius:100px;padding:4px 10px;cursor:default}
+#tb-pom .ptime{font-family:var(--fm);font-weight:700;font-size:.68rem;color:var(--ac);min-width:40px}
+.pombtn{background:none;border:none;cursor:pointer;color:var(--tx2);padding:2px;display:flex}
+.pombtn:hover{color:var(--tx)}
+.tb-btn{background:none;border:1px solid var(--bo);cursor:pointer;color:var(--tx2);
+  padding:6px 8px;border-radius:var(--rsm);transition:all .15s;display:flex;align-items:center;gap:5px;font-size:.7rem;font-family:var(--fb)}
+.tb-btn:hover{background:var(--bo);color:var(--tx)}
+.tb-btn.active{background:var(--ac);color:#fff;border-color:transparent;box-shadow:var(--glow)}
+/* ── LAYOUT ── */
+#layout{display:flex;flex:1;overflow:hidden}
+/* ── LEFT PANEL ── */
+#left-panel{width:340px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--bo);
+  display:flex;flex-direction:column;overflow:hidden}
+#left-scroll{flex:1;overflow-y:auto;padding:16px}
+#left-scroll::-webkit-scrollbar{width:4px}
+#left-scroll::-webkit-scrollbar-thumb{background:var(--bo2);border-radius:4px}
+/* ── RIGHT PANEL ── */
+#right-panel{flex:1;overflow:hidden;display:flex;flex-direction:column;background:var(--bg)}
+/* ── FORMS ── */
+.inp{width:100%;background:var(--bg3);border:1px solid var(--bo);border-radius:var(--rsm);
+  padding:9px 12px;font-family:var(--fb);font-size:.78rem;color:var(--tx);outline:none;transition:border .15s}
+.inp:focus{border-color:var(--ac)}
+.inp::placeholder{color:var(--tx3)}
+textarea.inp{resize:vertical;min-height:100px;font-family:var(--fb);line-height:1.6}
+label{display:block;font-size:.68rem;font-weight:600;color:var(--tx3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
+.fg{margin-bottom:12px}
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--rsm);
+  border:1px solid var(--bo);background:var(--gl);font-family:var(--fb);font-size:.75rem;
+  font-weight:600;color:var(--tx);cursor:pointer;transition:all .15s}
+.btn:hover{background:var(--bo);color:var(--tx)}
+.btn.bp{background:var(--ac);color:#fff;border-color:transparent;box-shadow:var(--glow)}
+.btn.bp:hover{background:var(--ac2);box-shadow:0 0 32px rgba(14,165,233,.45)}
+.btn.bpu{background:var(--pu);color:#fff;border-color:transparent}
+.btn.bgr{background:var(--gr);color:#fff;border-color:transparent}
+.btn.bsm{padding:5px 10px;font-size:.65rem}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+/* ── CHIP ── */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--gl);
+  border:1px solid var(--bo);border-radius:100px;font-size:.65rem;font-weight:600;cursor:pointer;
+  color:var(--tx2);transition:all .15s;font-family:var(--fb)}
+.chip:hover,.chip.on{background:var(--ac);color:#fff;border-color:transparent}
+/* ── TYPE SELECTOR ── */
+.type-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--bo);
+  border-radius:var(--r);cursor:pointer;transition:all .15s;font-size:.75rem;font-weight:600;color:var(--tx2);background:var(--bg3)}
+.type-btn.selected{border-color:var(--ac);color:var(--ac);background:rgba(14,165,233,.08)}
+.type-btn:hover{border-color:var(--bo2);color:var(--tx)}
+/* ── CODE VIEWER ── */
+#code-panel{flex:1;overflow:hidden;display:flex;flex-direction:column}
+#code-tabs{display:flex;gap:2px;padding:8px;border-bottom:1px solid var(--bo);background:var(--bg2)}
+.ctab{padding:6px 14px;border-radius:var(--rsm);font-size:.7rem;font-weight:700;cursor:pointer;
+  border:1px solid transparent;color:var(--tx3);transition:all .15s;font-family:var(--fm)}
+.ctab.active{background:var(--bg3);color:var(--tx);border-color:var(--bo)}
+#file-list{width:180px;flex-shrink:0;overflow-y:auto;border-right:1px solid var(--bo);background:var(--bg)}
+.file-item{padding:8px 12px;font-size:.68rem;font-family:var(--fm);cursor:pointer;border-bottom:1px solid rgba(14,165,233,.06);
+  color:var(--tx2);transition:all .15s;display:flex;align-items:center;gap:6px;overflow:hidden}
+.file-item:hover{background:var(--gl);color:var(--tx)}
+.file-item.active{background:rgba(14,165,233,.1);color:var(--ac);border-left:2px solid var(--ac)}
+#code-content{flex:1;overflow:auto;background:#011627}
+#code-content::-webkit-scrollbar{width:6px;height:6px}
+#code-content::-webkit-scrollbar-thumb{background:rgba(14,165,233,.2);border-radius:4px}
+pre{padding:20px;font-family:var(--fm);font-size:.72rem;line-height:1.7;color:#abe0f8;white-space:pre-wrap;word-break:break-all}
+/* ── CHAT PANEL ── */
+#chat-panel{position:fixed;bottom:70px;right:16px;width:360px;height:480px;
+  background:var(--bg2);border:1px solid var(--bo);border-radius:var(--rlg);
+  box-shadow:0 20px 60px rgba(0,0,0,.6),var(--glow);z-index:500;display:none;flex-direction:column;overflow:hidden}
+#chat-panel.open{display:flex}
+#chat-hd{background:linear-gradient(135deg,var(--ac),var(--pu));padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;cursor:grab}
+#chat-hd.dragging{cursor:grabbing}
+#chat-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+#chat-msgs::-webkit-scrollbar{width:4px}
+#chat-msgs::-webkit-scrollbar-thumb{background:var(--bo2);border-radius:4px}
+.cmsg{max-width:84%;padding:10px 13px;border-radius:var(--r);font-size:.75rem;line-height:1.5}
+.cmsg.user{background:var(--ac);color:#fff;align-self:flex-end;border-radius:var(--r) var(--r) 4px var(--r)}
+.cmsg.bot{background:var(--bg3);color:var(--tx);align-self:flex-start;border:1px solid var(--bo);border-radius:var(--r) var(--r) var(--r) 4px}
+#chat-inp-row{padding:10px;border-top:1px solid var(--bo);display:flex;gap:6px}
+/* ── SETTINGS MODAL ── */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:800;
+  align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-ov.open{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--bo2);border-radius:var(--rlg);
+  padding:24px;width:90%;max-width:480px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.7)}
+.modal-box::-webkit-scrollbar{width:4px}
+.modal-box::-webkit-scrollbar-thumb{background:var(--bo2);border-radius:4px}
+.modal-title{font-family:var(--fn);font-size:1.05rem;font-weight:800;color:var(--tx);margin-bottom:20px}
+/* ── PANEL SECTIONS ── */
+.section-title{font-family:var(--fn);font-size:.65rem;font-weight:700;color:var(--tx3);
+  text-transform:uppercase;letter-spacing:.1em;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--bo)}
+.panel-card{background:var(--bg3);border:1px solid var(--bo);border-radius:var(--r);padding:14px;margin-bottom:8px}
+.panel-card-title{font-weight:700;font-size:.78rem;color:var(--tx);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+/* ── TOGGLE ── */
+.toggle{position:relative;width:38px;height:21px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.tgl-track{position:absolute;inset:0;background:var(--bo2);border-radius:100px;cursor:pointer;transition:.25s}
+.toggle input:checked~.tgl-track{background:var(--ac)}
+.tgl-knob{position:absolute;top:3px;left:3px;width:15px;height:15px;background:#fff;border-radius:50%;transition:.25s;pointer-events:none}
+.toggle input:checked~.tgl-track .tgl-knob{transform:translateX(17px)}
+/* ── HISTORY ITEM ── */
+.hist-item{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);
+  border:1px solid var(--bo);border-radius:var(--rsm);cursor:pointer;transition:all .15s;margin-bottom:4px}
+.hist-item:hover{border-color:var(--ac)}
+/* ── SPINNER ── */
+.spinner{width:18px;height:18px;border:2px solid var(--bo2);border-top-color:var(--ac);
+  border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* ── EMPTY STATE ── */
+#empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;text-align:center;padding:40px;border:2px dashed var(--bo);border-radius:var(--rlg);
+  margin:16px;gap:12px}
+#empty-state svg{color:var(--bo2)}
+/* ── TOAST ── */
+#toast-ct{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999}
+.toast{background:var(--bg2);border:1px solid var(--bo2);border-radius:var(--r);padding:10px 18px;
+  font-size:.75rem;color:var(--tx);box-shadow:var(--glow);margin-top:6px;animation:toastIn .3s ease;text-align:center}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* ── TABS (code view) ── */
+#view-area{flex:1;overflow:hidden;display:flex;flex-direction:column}
+#view-tabs{display:flex;gap:3px;padding:10px 16px;border-bottom:1px solid var(--bo);background:var(--bg2)}
+.vtab{padding:6px 16px;border-radius:var(--rsm);font-size:.72rem;font-weight:700;cursor:pointer;
+  border:1px solid transparent;color:var(--tx3);transition:all .15s;font-family:var(--fb)}
+.vtab.active{background:var(--bg3);color:var(--tx);border-color:var(--bo)}
+/* ── POWER TOOLS ── */
+.power-tool{display:flex;align-items:center;gap:6px;padding:7px 10px;background:var(--bg3);
+  border:1px solid var(--bo);border-radius:var(--rsm);cursor:pointer;font-size:.68rem;font-weight:600;
+  color:var(--tx2);transition:all .15s}
+.power-tool:hover{border-color:var(--ac);color:var(--ac)}
+/* ── ANIMATION ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.animate-in{animation:fadeIn .25s ease}
+@keyframes particle{0%{transform:translateY(0) scale(1) rotate(0);opacity:1}100%{transform:translateY(-40px) scale(0) rotate(180deg);opacity:0}}
+.particle{animation:particle .8s ease-out forwards;position:absolute;pointer-events:none}
+/* ── ADMIN BADGE ── */
+#admin-badge{display:none;background:linear-gradient(135deg,var(--am),#f97316);color:#000;
+  font-family:var(--fm);font-size:.48rem;font-weight:700;padding:1px 6px;border-radius:100px;letter-spacing:.05em}
+#admin-badge.visible{display:inline-flex;align-items:center}
+/* ── LANG BUTTONS ── */
+.lang-btn{padding:3px 8px;border-radius:var(--rsm);font-size:.62rem;font-weight:700;cursor:pointer;
+  background:var(--bg3);border:1px solid var(--bo);color:var(--tx3);transition:all .15s;font-family:var(--fm)}
+.lang-btn.on{background:var(--ac);color:#fff;border-color:transparent}
+/* ── MOBILE ── */
+@media(max-width:768px){
+  #left-panel{display:none;position:fixed;top:0;bottom:0;left:0;width:300px;z-index:200}
+  #left-panel.open{display:flex}
+  #mob-menu{display:flex!important}
+  #tb-pom{display:none}
+}
+#mob-menu{display:none}
+/* ── RSS ── */
+.rss-item{padding:10px 0;border-bottom:1px solid var(--bo)}
+.rss-item:last-child{border:none}
+.rss-item a{color:var(--tx);font-weight:600;font-size:.76rem;text-decoration:none;display:block;margin-bottom:3px;line-height:1.4}
+.rss-item a:hover{color:var(--ac)}
+.rss-meta{font-size:.58rem;color:var(--tx3);font-family:var(--fm)}
+/* ── ADMIN NAV ── */
+#admin-nav{display:none}
+/* ── CUSTOM BTNS DISPLAY ── */
+#custom-btns-display{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;min-height:20px}
+</style>
+</head>
+<body>
+<div id="app">
+<!-- TOPBAR -->
+<div id="topbar">
+  <button id="mob-menu" class="tb-btn" onclick="toggleLeftPanel()" style="display:none">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div id="tb-logo" onclick="showParticles()">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="wpg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+      <rect width="100" height="100" rx="20" fill="rgba(14,165,233,.08)"/>
+      <path d="M50 10 L85 30 V70 L50 90 L15 70 V30 Z" stroke="url(#wpg)" stroke-width="3" fill="none"/>
+      <text x="50" y="62" font-family="serif" font-weight="900" font-size="36" fill="white" text-anchor="middle">W</text>
+      <circle cx="75" cy="25" r="7" fill="#0ea5e9"/>
+    </svg>
+    <div id="tb-logo-text">WP Ultrapost<span>DUVI · AI ARCHITECT</span></div>
+  </div>
+  <!-- Pomodoro topbar -->
+  <div id="tb-pom">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span class="ptime" id="pom-display">25:00</span>
+    <span id="pom-mode-lbl" style="font-size:.5rem;color:var(--tx3)">FOCUS</span>
+    <button class="pombtn" id="pom-play-btn" onclick="pomToggle()" title="Start">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    </button>
+    <button class="pombtn" onclick="pomReset()" title="Reset">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.6"/></svg>
+    </button>
+  </div>
+  <div id="tb-flex"></div>
+  <span id="admin-badge">⚡ ADMIN</span>
+  <!-- Lang -->
+  <div style="display:flex;gap:3px">
+    <button class="lang-btn on" id="lb-es" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" id="lb-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="lb-zh" onclick="setLang('zh')">中</button>
+    <button class="lang-btn" id="lb-fil" onclick="setLang('fil')">FIL</button>
+    <button class="lang-btn" id="lb-hi" onclick="setLang('hi')">हि</button>
+    <button class="lang-btn" id="lb-ru" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" id="lb-ms" onclick="setLang('ms')">MY</button>
+    <button class="lang-btn" id="lb-ar" onclick="setLang('ar')">ع</button>
+  </div>
+  <!-- Theme buttons -->
+  <button class="tb-btn active" id="th-dark" onclick="setTheme('dark')" title="Dark">🌙</button>
+  <button class="tb-btn" id="th-light" onclick="setTheme('light')" title="Light">☀️</button>
+  <!-- Hey! toy button -->
+  <button class="tb-btn" id="hey-btn" onclick="heyClick(this)" style="background:linear-gradient(135deg,#fff,#e2e8f0);color:#0f172a;border:none;font-weight:800">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 18 C9 18 4 17 4 12 L4 6 C4 4.9 4.9 4 6 4 L18 4 C19.1 4 20 4.9 20 6 L20 12 C20 17 15 18 15 18"/><path d="M12 18 L12 22"/><path d="M8 22 L16 22"/></svg>
+    Hey!
+  </button>
+  <!-- AI Chat -->
+  <button class="tb-btn" id="chat-toggle-btn" onclick="toggleChat()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span id="chat-btn-lbl">Duvi Chat</span>
+  </button>
+  <!-- Settings -->
+  <button class="tb-btn" onclick="openModal('modal-settings')" title="Settings">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
+</div>
+
+<div id="layout">
+<!-- LEFT PANEL -->
+<div id="left-panel">
+  <div id="left-scroll">
+    <!-- Logo title -->
+    <div style="margin-bottom:16px">
+      <div style="font-family:var(--fn);font-weight:800;font-size:1rem;color:var(--tx)">WP Ultrapost</div>
+      <div style="font-size:.6rem;color:var(--ac);font-family:var(--fm);letter-spacing:.08em">DUVI AI ARCHITECT</div>
+    </div>
+
+    <!-- Type selector -->
+    <div class="section-title" id="lbl-type">Objetivo del Agente</div>
+    <div id="type-grid" style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px"></div>
+
+    <!-- Prompt -->
+    <div class="fg">
+      <label id="lbl-prompt">Prompt Maestro</label>
+      <textarea class="inp" id="main-prompt" rows="5" id="main-prompt"
+        placeholder="Hola Duvi, necesito un plugin para mi SmartMag News que detecte enlaces rotos automáticamente..."></textarea>
+    </div>
+
+    <!-- Update mode badge -->
+    <div id="update-badge" style="display:none;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:var(--rsm);font-size:.65rem;font-weight:700;color:var(--am)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        MODO ACTUALIZACIÓN
+        <button onclick="clearContext()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--am)">✕</button>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn bp" id="gen-btn" onclick="generate()" style="flex:1;justify-content:center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <span id="gen-btn-lbl">Invocar Duvi</span>
+      </button>
+      <button class="btn bsm" onclick="document.getElementById('zip-inp').click()" title="Upload ZIP">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        ZIP
+      </button>
+      <input type="file" id="zip-inp" accept=".zip" style="display:none" onchange="uploadZip(this)"/>
+      <button class="btn bsm" onclick="humanize()" title="Humanize">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </button>
+    </div>
+
+    <!-- Power Tools -->
+    <div class="section-title" id="lbl-power-tools">Power Tools</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px">
+      <div class="power-tool" onclick="powerTool('headline')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+        <span id="lbl-pt-headline">Generar Títulos</span>
+      </div>
+      <div class="power-tool" onclick="powerTool('keywords')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span id="lbl-pt-keywords">Audit Keywords</span>
+      </div>
+      <div class="power-tool" onclick="powerTool('grammar')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span id="lbl-pt-grammar">Revisar Gramática</span>
+      </div>
+      <div class="power-tool" onclick="powerTool('tone')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span id="lbl-pt-tone">Cambiar Tono</span>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="section-title">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:4px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="lbl-history">Proyectos Recientes</span>
+    </div>
+    <div id="hist-list" style="max-height:160px;overflow-y:auto"></div>
+
+    <!-- Custom link buttons (admin) -->
+    <div id="custom-btns-section" style="display:none">
+      <div class="section-title">🔗 Link Buttons</div>
+      <div id="custom-btns-display"></div>
+      <button class="btn bsm" style="margin-top:6px" onclick="openModal('modal-custom-btn')">+ Create Button</button>
+    </div>
+
+    <!-- RSS preview (if enabled) -->
+    <div id="rss-sidebar-preview" style="display:none">
+      <div class="section-title">📡 Latest News</div>
+      <div id="rss-preview-list"></div>
+    </div>
+
+    <!-- Credits -->
+    <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--bo);font-size:.6rem;color:var(--tx3)">
+      <div style="margin-bottom:6px">© 2026 WP Ultrapost DUVI App. Todos los derechos reservados.</div>
+      <a href="https://www.linkedin.com/in/jaime-andrés-dueñas-vicuña" target="_blank"
+        style="display:inline-flex;align-items:center;gap:4px;color:var(--ac);text-decoration:none;font-weight:700;font-size:.65rem">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="#0077b5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        Jaime Andrés Dueñas Vicuña
+      </a>
+      <a href="https://www.paypal.com/paypalme/texiduvi" target="_blank"
+        style="display:flex;align-items:center;justify-content:center;gap:5px;margin-top:8px;background:linear-gradient(135deg,#009cde,#003087);color:#fff;padding:6px 12px;border-radius:20px;text-decoration:none;font-weight:700;font-size:.62rem">
+        ☕ Buy me a coffee · PayPal
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div id="right-panel">
+  <!-- Empty state -->
+  <div id="empty-state" class="animate-in">
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><circle cx="12" cy="10" r="3"/></svg>
+    <div style="font-family:var(--fn);font-size:1.6rem;font-weight:800;color:var(--tx)" id="lbl-empty-title">Duvi Architect AI</div>
+    <div style="font-size:.8rem;color:var(--tx2);max-width:420px;line-height:1.6" id="lbl-empty-desc">Sube un ZIP existente para actualizarlo, o selecciona un tipo de herramienta y escribe tu prompt.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+      <div style="padding:8px 14px;background:var(--bg3);border:1px solid var(--bo);border-radius:var(--r);font-size:.7rem;color:var(--tx2)">🔌 WordPress Plugins</div>
+      <div style="padding:8px 14px;background:var(--bg3);border:1px solid var(--bo);border-radius:var(--r);font-size:.7rem;color:var(--tx2)">🎨 Theme Mods</div>
+      <div style="padding:8px 14px;background:var(--bg3);border:1px solid var(--bo);border-radius:var(--r);font-size:.7rem;color:var(--tx2)">📝 Humanizer IA</div>
+    </div>
+  </div>
+
+  <!-- Code viewer (hidden until generation) -->
+  <div id="code-viewer" style="display:none;flex:1;flex-direction:column;overflow:hidden">
+    <!-- Project header -->
+    <div id="proj-header" style="padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div>
+        <div id="proj-name" style="font-family:var(--fn);font-weight:800;font-size:.95rem;color:var(--tx)"></div>
+        <div id="proj-desc" style="font-size:.68rem;color:var(--tx2);margin-top:2px"></div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <div id="view-tabs">
+          <button class="vtab active" onclick="switchView('code')" id="vtab-code">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:4px"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Code
+          </button>
+          <button class="vtab" onclick="switchView('guide')" id="vtab-guide">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:4px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Guide
+          </button>
+          <button class="vtab" onclick="switchView('analysis')" id="vtab-analysis">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:4px"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Analysis
+          </button>
+        </div>
+        <button class="btn bsm bgr" onclick="downloadZip()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          ZIP
+        </button>
+        <button class="btn bsm" onclick="copyCurrentFile()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+    </div>
+
+    <!-- Code view -->
+    <div id="view-code" style="flex:1;display:flex;overflow:hidden">
+      <div id="file-list"></div>
+      <div id="code-content"><pre id="code-pre">// Select a file</pre></div>
+    </div>
+
+    <!-- Guide view -->
+    <div id="view-guide" style="display:none;flex:1;overflow-y:auto;padding:24px;background:#0d1117;font-size:.78rem;color:var(--tx2);line-height:1.8" id="guide-content">
+      <div id="guide-content"></div>
+    </div>
+
+    <!-- Analysis view -->
+    <div id="view-analysis" style="display:none;flex:1;overflow-y:auto;padding:20px">
+      <div id="analysis-content" style="font-size:.78rem;color:var(--tx2);line-height:1.8"></div>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="loading-overlay" style="display:none;position:absolute;inset:0;background:rgba(2,6,23,.85);backdrop-filter:blur(8px);z-index:50;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+    <div class="spinner" style="width:32px;height:32px;border-width:3px"></div>
+    <div style="font-family:var(--fn);font-weight:700;font-size:.85rem;color:var(--tx)" id="loading-lbl">Analizando & Construyendo...</div>
+    <div style="font-size:.62rem;color:var(--tx3);font-family:var(--fm)">Duvi Core · En línea</div>
+  </div>
+</div>
+</div><!-- /layout -->
+
+<!-- Error bar -->
+<div id="error-bar" style="display:none;background:rgba(239,68,68,.1);border-top:1px solid rgba(239,68,68,.3);padding:10px 16px;font-size:.75rem;color:#fca5a5;flex-shrink:0;display:none;align-items:center;gap:8px">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <span id="error-msg"></span>
+  <button onclick="document.getElementById('error-bar').style.display='none'" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#fca5a5">✕</button>
+</div>
+</div><!-- /app -->
+
+<!-- AI CHAT PANEL -->
+<div id="chat-panel">
+  <div id="chat-hd" onmousedown="chatDragStart(event)">
+    <div style="display:flex;align-items:center;gap:8px;color:#fff;font-family:var(--fn);font-weight:700;font-size:.82rem">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v2"/></svg>
+      <span id="chat-title-lbl">Chat Asistente Duvi</span>
+    </div>
+    <button onclick="toggleChat()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem">✕</button>
+  </div>
+  <div id="chat-msgs">
+    <div class="cmsg bot" id="chat-welcome">¡Hola! Soy Duvi. Mientras construyo tus plugins, pregúntame sobre SEO, AdSense o estrategias de WordPress.</div>
+  </div>
+  <div id="chat-inp-row">
+    <button class="btn bsm" id="voice-btn" onclick="startVoice()" style="padding:8px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    </button>
+    <input class="inp" id="chat-input" placeholder="Escribe o habla..." style="flex:1" onkeydown="if(event.key==='Enter')sendChat()"/>
+    <button class="btn bp bsm" onclick="sendChat()" style="padding:8px 12px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-ov" id="modal-settings">
+  <div class="modal-box">
+    <div class="modal-title">⚙️ Configuración · WP Ultrapost DUVI</div>
+
+    <!-- API Keys -->
+    <div class="panel-card" style="margin-bottom:10px">
+      <div class="panel-card-title">🤖 AI API Keys</div>
+      <div class="fg">
+        <label>Groq API Key <span style="background:rgba(34,197,94,.15);color:var(--gr);padding:1px 6px;border-radius:100px;font-size:.5rem;font-weight:700">FREE</span></label>
+        <input class="inp" type="password" id="cfg-groq" placeholder="gsk_..."/>
+        <div style="font-size:.58rem;color:var(--tx3);margin-top:3px">Free at console.groq.com · Powers Duvi Chat</div>
+      </div>
+      <div class="fg">
+        <label>Gemini API Key</label>
+        <input class="inp" type="password" id="cfg-gemini" placeholder="AIza..."/>
+        <div style="font-size:.58rem;color:var(--tx3);margin-top:3px">aistudio.google.com · Powers plugin generation</div>
+      </div>
+      <div class="fg">
+        <label>Active Chat Provider</label>
+        <div style="display:flex;gap:6px">
+          <button class="chip on" id="prov-groq" onclick="setProvider('groq')">⚡ Groq</button>
+          <button class="chip" id="prov-gemini" onclick="setProvider('gemini')">✨ Gemini</button>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Groq Chat Model</label>
+        <select class="inp" id="cfg-groq-model" style="max-width:260px">
+          <option value="llama-3.3-70b-versatile">Llama 3.3 70B ★</option>
+          <option value="llama-3.1-70b-versatile">Llama 3.1 70B</option>
+          <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+          <option value="gemma2-9b-it">Gemma 2 9B</option>
+        </select>
+      </div>
+      <button class="btn bp bsm" onclick="saveAPIKeys()">💾 Save Keys</button>
+      <span id="keys-badge" style="display:none;font-size:.6rem;color:var(--gr);margin-left:8px;font-family:var(--fm)">✅ Saved</span>
+    </div>
+
+    <!-- Sounds -->
+    <div class="panel-card" style="margin-bottom:10px">
+      <div class="panel-card-title">🔊 UI Sounds</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:.75rem;color:var(--tx2)">Sounds & effects</div>
+        <label class="toggle"><input type="checkbox" id="snd-toggle" onchange="toggleSound(this.checked)" checked><div class="tgl-track"><div class="tgl-knob"></div></div></label>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+        <div style="font-size:.75rem;color:var(--tx2)">Show "Hey!" button</div>
+        <label class="toggle"><input type="checkbox" id="hey-toggle" onchange="toggleHeyBtn(this.checked)" checked><div class="tgl-track"><div class="tgl-knob"></div></div></label>
+      </div>
+    </div>
+
+    <!-- Pomodoro Settings -->
+    <div class="panel-card" style="margin-bottom:10px">
+      <div class="panel-card-title">🍅 Pomodoro</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div class="fg"><label>Focus (min)</label><input class="inp" type="number" id="pom-cfg-focus" value="25" min="1" max="90"/></div>
+        <div class="fg"><label>Short Break (min)</label><input class="inp" type="number" id="pom-cfg-short" value="5" min="1" max="30"/></div>
+        <div class="fg"><label>Long Break (min)</label><input class="inp" type="number" id="pom-cfg-long" value="15" min="5" max="60"/></div>
+        <div class="fg"><label>Sessions before long</label><input class="inp" type="number" id="pom-cfg-sessions" value="4" min="1" max="10"/></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:.75rem;color:var(--tx2)">Auto-start next session</div>
+        <label class="toggle"><input type="checkbox" id="pom-auto"><div class="tgl-track"><div class="tgl-knob"></div></div></label>
+      </div>
+      <button class="btn bsm bp" onclick="savePomConfig()">💾 Save & Reset</button>
+    </div>
+
+    <!-- RSS -->
+    <div class="panel-card" style="margin-bottom:10px">
+      <div class="panel-card-title">📡 RSS Feeds</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:.75rem;color:var(--tx2)">Show RSS in sidebar</div>
+        <label class="toggle"><input type="checkbox" id="rss-toggle" onchange="toggleRSS(this.checked)"><div class="tgl-track"><div class="tgl-knob"></div></div></label>
+      </div>
+      <div id="rss-feeds-settings" style="margin-bottom:8px"></div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        <input class="inp" id="rss-new-url" placeholder="RSS URL..." style="flex:1;min-width:150px"/>
+        <input class="inp" id="rss-new-name" placeholder="Name..." style="width:100px"/>
+        <button class="btn bp bsm" onclick="addRSSFeed()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- Custom Link Buttons -->
+    <div class="panel-card" style="margin-bottom:10px">
+      <div class="panel-card-title">🔗 Custom Link Buttons</div>
+      <div id="custom-btns-settings" style="margin-bottom:8px"></div>
+      <button class="btn bsm" onclick="openModal('modal-custom-btn');closeModal('modal-settings')">+ Create Button</button>
+    </div>
+
+    <!-- Admin key -->
+    <div class="panel-card" style="margin-bottom:10px">
+      <div class="panel-card-title">🔐 Admin & Master Key</div>
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <div style="flex:1;position:relative">
+          <input class="inp" type="password" id="admin-key-inp" placeholder="Paste your master key..." style="width:100%;padding-right:34px"/>
+          <button onclick="(function(){var i=document.getElementById('admin-key-inp');i.type=i.type==='password'?'text':'password';})()" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--tx3)">👁</button>
+        </div>
+        <button class="btn bp bsm" onclick="checkAdminKey()">✓ Activate</button>
+      </div>
+      <label class="btn bsm" style="cursor:pointer;display:inline-flex">
+        📂 Import JSON Key<input type="file" accept=".json" onchange="importAdminJSON(this)" style="display:none"/>
+      </label>
+      <span id="admin-status" style="display:block;margin-top:6px;font-size:.62rem;color:var(--tx3);font-family:var(--fm)"></span>
+      <div id="admin-controls" style="display:none;margin-top:10px">
+        <div style="font-size:.68rem;color:var(--gr);margin-bottom:8px;font-family:var(--fm)">✅ Admin mode active</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="btn bsm" onclick="toggleCustomBtns()" id="cbtns-toggle-btn">🔗 Enable Link Buttons</button>
+          <button class="btn bsm" onclick="exportData()">📤 Export</button>
+          <button class="btn bsm" style="background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.3);color:var(--rd)" onclick="nukeAll()">💣 Nuke Data</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy & Legal -->
+    <div class="panel-card" style="margin-bottom:10px">
+      <div class="panel-card-title">🔒 Privacy & Legal</div>
+      <details style="margin-bottom:6px">
+        <summary style="cursor:pointer;font-size:.74rem;color:var(--tx);font-weight:600;padding:4px 0">▶ Privacy Policy</summary>
+        <div style="font-size:.68rem;color:var(--tx2);line-height:1.6;padding:8px 0">WP Ultrapost DUVI stores all data locally in your browser. No data is transmitted to external servers except your direct API calls to Groq/Gemini. API keys are stored locally. We do not track, collect or share any personal data.</div>
+      </details>
+      <details>
+        <summary style="cursor:pointer;font-size:.74rem;color:var(--tx);font-weight:600;padding:4px 0">▶ Legal Notice & Terms</summary>
+        <div style="font-size:.68rem;color:var(--tx2);line-height:1.6;padding:8px 0">This app is provided "as is" for professional WordPress development. AI-generated code is for reference and should be reviewed before deployment. © 2026 WP Ultrapost DUVI · Jaime Andrés Dueñas Vicuña. All rights reserved.</div>
+      </details>
+    </div>
+
+    <!-- Credits -->
+    <div class="panel-card">
+      <div class="panel-card-title">👤 Credits</div>
+      <div style="font-size:.68rem;color:var(--tx2);margin-bottom:8px">© 2026 WP Ultrapost DUVI App. Todos los derechos reservados.</div>
+      <a href="https://www.linkedin.com/in/jaime-andrés-dueñas-vicuña" target="_blank"
+        style="display:inline-flex;align-items:center;gap:5px;color:var(--ac);text-decoration:none;font-weight:700;font-size:.72rem;margin-bottom:8px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#0077b5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        Jaime Andrés Dueñas Vicuña
+      </a><br/>
+      <a href="https://www.paypal.com/paypalme/texiduvi" target="_blank"
+        style="display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#009cde,#003087);color:#fff;padding:6px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-size:.65rem">
+        ☕ Buy me a coffee · PayPal
+      </a>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:16px">
+      <button class="btn bp" onclick="closeModal('modal-settings')">✓ Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOM BUTTON MODAL -->
+<div class="modal-ov" id="modal-custom-btn">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-title">🔗 Create Custom Button</div>
+    <div class="fg"><label>Label</label><input class="inp" id="cb-title" placeholder="My favorite tool..." oninput="previewBtn()"/></div>
+    <div class="fg"><label>URL</label><input class="inp" id="cb-url" type="url" placeholder="https://..." oninput="autoFillBtn()"/></div>
+    <div class="fg"><label>Emoji</label><input class="inp" id="cb-emoji" placeholder="🔗" maxlength="2" style="width:70px" oninput="previewBtn()"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div class="fg"><label>Background</label><input type="color" class="inp" id="cb-bg" value="#0ea5e9" oninput="previewBtn()" style="height:36px;padding:2px 4px;cursor:pointer"/></div>
+      <div class="fg"><label>Text color</label><input type="color" class="inp" id="cb-fg" value="#ffffff" oninput="previewBtn()" style="height:36px;padding:2px 4px;cursor:pointer"/></div>
+    </div>
+    <div class="fg">
+      <label>Shape</label>
+      <div style="display:flex;gap:6px">
+        <span class="chip on" id="cb-shape-pill" onclick="setCbShape('pill')">💊 Pill</span>
+        <span class="chip" id="cb-shape-rect" onclick="setCbShape('rect')">▭ Rect</span>
+        <span class="chip" id="cb-shape-circle" onclick="setCbShape('circle')">○ Circle</span>
+      </div>
+    </div>
+    <div class="fg"><label>Preview</label><div id="cb-preview" style="padding:10px;background:var(--bg3);border:1px solid var(--bo);border-radius:var(--r);display:flex;justify-content:center"></div></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal('modal-custom-btn')">Cancel</button>
+      <button class="btn bp" onclick="saveCustomBtn()">Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast-ct"></div>
+
+<!-- PARTICLES -->
+<div id="particles-ct" style="position:fixed;top:60px;left:0;pointer-events:none;z-index:9999;overflow:hidden;width:200px;height:100px"></div>
+
+<script>
+'use strict';
+// ══════════════════════════════════════════════════════════════
+// WP Ultrapost DUVI — Complete Single-File App (Pack DUVI)
+// ══════════════════════════════════════════════════════════════
+
+// ── STORAGE ──
+const LS={get:(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const S={
+  get cfg(){return LS.get('wpu_cfg',{})}, set cfg(v){LS.set('wpu_cfg',v)},
+  get hist(){return LS.get('wpu_hist',[])}, set hist(v){LS.set('wpu_hist',v)},
+  get btns(){return LS.get('wpu_btns',[])}, set btns(v){LS.set('wpu_btns',v)},
+  get rssFeeds(){return LS.get('wpu_rss',RSS_DEFAULTS)}, set rssFeeds(v){LS.set('wpu_rss',v)},
+};
+const uid=()=>Math.random().toString(36).slice(2)+Date.now().toString(36);
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const now8601=()=>new Date().toISOString();
+
+// ── AUDIO ──
+let _soundOn=true;
+const _ac=new(window.AudioContext||window.webkitAudioContext)();
+function playClick(){if(!_soundOn)return;try{const o=_ac.createOscillator(),g=_ac.createGain();o.type='sine';o.frequency.value=800;g.gain.setValueAtTime(.04,_ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,_ac.currentTime+.08);o.connect(g);g.connect(_ac.destination);o.start();o.stop(_ac.currentTime+.08);}catch{}}
+function playSuccess(){if(!_soundOn)return;try{[523,659,784].forEach((f,i)=>setTimeout(()=>{const o=_ac.createOscillator(),g=_ac.createGain();o.frequency.value=f;g.gain.setValueAtTime(.06,_ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,_ac.currentTime+.18);o.connect(g);g.connect(_ac.destination);o.start();o.stop(_ac.currentTime+.2);},i*100));}catch{}}
+function playMagic(idx){if(!_soundOn)return;try{const o=_ac.createOscillator(),g=_ac.createGain();o.type=['sine','square','sawtooth'][idx%3];o.frequency.setValueAtTime(440+idx*30,_ac.currentTime);o.frequency.exponentialRampToValueAtTime(880+idx*20,_ac.currentTime+.3);g.gain.setValueAtTime(.06,_ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,_ac.currentTime+.4);o.connect(g);g.connect(_ac.destination);o.start();o.stop(_ac.currentTime+.4);}catch{}}
+function toggleSound(v){_soundOn=v;const cfg=S.cfg;cfg.sound=v;S.cfg=cfg;}
+
+// ── TOAST ──
+function toast(title,msg,ms=2600){const ct=document.getElementById('toast-ct');const el=document.createElement('div');el.className='toast';el.innerHTML=`<strong style="color:var(--ac)">${esc(title)}</strong>${msg?' · '+esc(msg):''}`;ct.appendChild(el);setTimeout(()=>el.remove(),ms);}
+
+// ── PARTICLES ──
+let _toyIdx=0;
+const EMOJIS=['⚡','✨','🔥','💡','🚀','⭐','🎯','💎','🌟','🎪'];
+function showParticles(){
+  const ct=document.getElementById('particles-ct');
+  for(let i=0;i<8;i++){
+    const el=document.createElement('div');
+    el.className='particle';
+    el.style.cssText=`left:${20+Math.random()*160}px;top:${10+Math.random()*60}px;font-size:${12+Math.random()*10}px;animation-delay:${Math.random()*.3}s`;
+    el.textContent=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+    ct.appendChild(el);
+    setTimeout(()=>el.remove(),900);
+  }
+  playMagic(_toyIdx);
+}
+function heyClick(btn){_toyIdx=(_toyIdx+1)%25;showParticles();playMagic(_toyIdx);}
+
+// ── TRANSLATIONS ──
+const T={
+  es:{appTitle:'WP Ultrapost DUVI',objective:'Objetivo del Agente',masterPrompt:'Prompt Maestro',
+    invoke:'Invocar Duvi',analyzing:'Analizando & Construyendo...',
+    emptyTitle:'Duvi Architect AI',emptyDesc:'Sube un ZIP existente o selecciona un tipo de herramienta y escribe tu prompt.',
+    powerTools:'Power Tools',ptHeadline:'Generar Títulos',ptKeywords:'Audit Keywords',
+    ptGrammar:'Revisar Gramática',ptTone:'Cambiar Tono',history:'Proyectos Recientes',
+    chatTitle:'Chat Asistente Duvi',chatWelcome:'¡Hola! Soy Duvi. Mientras construyo tus plugins, pregúntame sobre SEO, AdSense o WordPress.',
+    types:{plugin:'Plugin WordPress',extension:'Extensión Navegador',theme:'Mod de Tema',
+      widget:'Widget / Shortcode',seo:'Análisis SEO',humanizer:'Humanizador IA'}},
+  en:{appTitle:'WP Ultrapost DUVI',objective:'Agent Objective',masterPrompt:'Master Prompt',
+    invoke:'Invoke Duvi',analyzing:'Analyzing & Building...',
+    emptyTitle:'Duvi Architect AI',emptyDesc:'Upload an existing ZIP to update it or pick a tool type and write your prompt.',
+    powerTools:'Power Tools',ptHeadline:'Generate Headlines',ptKeywords:'Keyword Audit',
+    ptGrammar:'Check Grammar',ptTone:'Change Tone',history:'Recent Projects',
+    chatTitle:'Duvi AI Assistant',chatWelcome:'Hello! I am Duvi. While I build your plugins, ask me about SEO, AdSense or WordPress.',
+    types:{plugin:'WP Plugin',extension:'Browser Extension',theme:'Theme Mod',
+      widget:'Widget/Shortcode',seo:'SEO Analysis',humanizer:'AI Humanizer'}},
+  zh:{appTitle:'WP Ultrapost DUVI',objective:'代理目标',masterPrompt:'主提示词',
+    invoke:'调用 Duvi',analyzing:'分析与构建...',
+    emptyTitle:'Duvi Architect AI',emptyDesc:'上传现有ZIP进行更新，或选择工具类型并输入提示词。',
+    powerTools:'Power Tools',ptHeadline:'生成标题',ptKeywords:'关键词审计',
+    ptGrammar:'检查语法',ptTone:'改变语气',history:'最近项目',
+    chatTitle:'Duvi AI助手',chatWelcome:'您好！我是Duvi。在构建插件的同时，您可以询问SEO或WordPress问题。',
+    types:{plugin:'WP插件',extension:'浏览器扩展',theme:'主题修改',
+      widget:'小工具',seo:'SEO分析',humanizer:'AI人性化'}},
+  fil:{appTitle:'WP Ultrapost DUVI',objective:'Layunin ng Ahente',masterPrompt:'Master Prompt',
+    invoke:'I-invoke ang Duvi',analyzing:'Sinusuri & Binubuo...',
+    emptyTitle:'Duvi Architect AI',emptyDesc:'Mag-upload ng ZIP o pumili ng tool at magsulat ng prompt.',
+    powerTools:'Power Tools',ptHeadline:'Gumawa ng Pamagat',ptKeywords:'Audit ng Keywords',
+    ptGrammar:'Suriin ang Grammar',ptTone:'Baguhin ang Tono',history:'Mga Kamakailang Proyekto',
+    chatTitle:'Duvi AI Assistant',chatWelcome:'Kamusta! Ako si Duvi. Magtanong tungkol sa SEO o WordPress.',
+    types:{plugin:'WP Plugin',extension:'Browser Extension',theme:'Theme Mod',
+      widget:'Widget',seo:'SEO Analysis',humanizer:'AI Humanizer'}},
+  hi:{appTitle:'WP Ultrapost DUVI',objective:'एजेंट उद्देश्य',masterPrompt:'मास्टर प्रॉम्प्ट',
+    invoke:'Duvi को बुलाएं',analyzing:'विश्लेषण व निर्माण...',
+    emptyTitle:'Duvi Architect AI',emptyDesc:'ZIP अपलोड करें या टूल चुनें और प्रॉम्प्ट लिखें।',
+    powerTools:'Power Tools',ptHeadline:'शीर्षक बनाएं',ptKeywords:'कीवर्ड ऑडिट',
+    ptGrammar:'व्याकरण जांच',ptTone:'टोन बदलें',history:'हाल के प्रोजेक्ट',
+    chatTitle:'Duvi AI सहायक',chatWelcome:'नमस्ते! मैं Duvi हूं। SEO या WordPress के बारे में पूछें।',
+    types:{plugin:'WP प्लगइन',extension:'ब्राउज़र एक्सटेंशन',theme:'थीम मॉड',
+      widget:'विजेट',seo:'SEO विश्लेषण',humanizer:'AI ह्युमनाइज़र'}},
+  ru:{appTitle:'WP Ultrapost DUVI',objective:'Цель агента',masterPrompt:'Основной промпт',
+    invoke:'Вызвать Duvi',analyzing:'Анализирую и строю...',
+    emptyTitle:'Duvi Architect AI',emptyDesc:'Загрузите ZIP или выберите тип инструмента и напишите промпт.',
+    powerTools:'Power Tools',ptHeadline:'Генерировать заголовки',ptKeywords:'Аудит ключевых слов',
+    ptGrammar:'Проверка грамматики',ptTone:'Изменить тон',history:'Недавние проекты',
+    chatTitle:'Duvi AI Ассистент',chatWelcome:'Привет! Я Duvi. Спросите о SEO или WordPress.',
+    types:{plugin:'WP Плагин',extension:'Расширение',theme:'Модификация темы',
+      widget:'Виджет',seo:'SEO Анализ',humanizer:'AI Гуманизатор'}},
+  ms:{appTitle:'WP Ultrapost DUVI',objective:'Objektif Ejen',masterPrompt:'Prompt Utama',
+    invoke:'Aktifkan Duvi',analyzing:'Menganalisis & Membina...',
+    emptyTitle:'Duvi Architect AI',emptyDesc:'Muat naik ZIP atau pilih jenis alat dan tulis prompt.',
+    powerTools:'Power Tools',ptHeadline:'Jana Tajuk',ptKeywords:'Audit Kata Kunci',
+    ptGrammar:'Semak Tatabahasa',ptTone:'Tukar Nada',history:'Projek Terkini',
+    chatTitle:'Pembantu Duvi AI',chatWelcome:'Halo! Saya Duvi. Tanya tentang SEO atau WordPress.',
+    types:{plugin:'WP Plugin',extension:'Sambungan Pelayar',theme:'Mod Tema',
+      widget:'Widget',seo:'Analisis SEO',humanizer:'Penghumanisasi AI'}},
+  ar:{appTitle:'WP Ultrapost DUVI',objective:'هدف الوكيل',masterPrompt:'البرومبت الرئيسي',
+    invoke:'استدعاء Duvi',analyzing:'تحليل وبناء...',
+    emptyTitle:'Duvi Architect AI',emptyDesc:'ارفع ملف ZIP أو اختر نوع الأداة واكتب البرومبت.',
+    powerTools:'أدوات القوة',ptHeadline:'إنشاء عناوين',ptKeywords:'تدقيق الكلمات المفتاحية',
+    ptGrammar:'فحص القواعد',ptTone:'تغيير النبرة',history:'المشاريع الأخيرة',
+    chatTitle:'مساعد Duvi AI',chatWelcome:'مرحباً! أنا Duvi. اسأل عن SEO أو WordPress.',
+    types:{plugin:'إضافة WP',extension:'امتداد المتصفح',theme:'تعديل القالب',
+      widget:'أداة',seo:'تحليل SEO',humanizer:'محسّن AI'}},
+};
+let curLang='es';
+function t(key,...args){const L=T[curLang]||T.es;const v=key.split('.').reduce((o,k)=>o?.[k],L);return v||key;}
+function setLang(lang){
+  curLang=lang;
+  const isRTL=lang==='ar';
+  document.documentElement.setAttribute('dir',isRTL?'rtl':'ltr');
+  ['es','en','zh','fil','hi','ru','ms','ar'].forEach(l=>{
+    const b=document.getElementById('lb-'+l);
+    if(b)b.classList.toggle('on',l===lang);
+  });
+  const cfg=S.cfg;cfg.lang=lang;S.cfg=cfg;
+  applyTranslations();
+}
+function applyTranslations(){
+  const L=T[curLang]||T.es;
+  // topbar
+  document.getElementById('chat-btn-lbl').textContent=L.chatTitle||'Duvi Chat';
+  // left panel
+  const lo=document.getElementById('lbl-type');if(lo)lo.textContent=L.objective||'Objetivo';
+  const lp=document.getElementById('lbl-prompt');if(lp)lp.textContent=L.masterPrompt||'Prompt';
+  const lh=document.getElementById('lbl-history');if(lh)lh.textContent=L.history||'History';
+  const lpt=document.getElementById('lbl-power-tools');if(lpt)lpt.textContent=L.powerTools||'Power Tools';
+  const lg=document.getElementById('gen-btn-lbl');if(lg)lg.textContent=L.invoke||'Invocar';
+  const ll=document.getElementById('loading-lbl');if(ll)ll.textContent=L.analyzing||'Analyzing...';
+  const let_=document.getElementById('lbl-pt-headline');if(let_)let_.textContent=L.ptHeadline||'Headlines';
+  const lk=document.getElementById('lbl-pt-keywords');if(lk)lk.textContent=L.ptKeywords||'Keywords';
+  const lgr=document.getElementById('lbl-pt-grammar');if(lgr)lgr.textContent=L.ptGrammar||'Grammar';
+  const lto=document.getElementById('lbl-pt-tone');if(lto)lto.textContent=L.ptTone||'Tone';
+  const et=document.getElementById('lbl-empty-title');if(et)et.textContent=L.emptyTitle||'Duvi AI';
+  const ed=document.getElementById('lbl-empty-desc');if(ed)ed.textContent=L.emptyDesc||'';
+  const cw=document.getElementById('chat-welcome');if(cw)cw.textContent=L.chatWelcome||'Hi!';
+  const ct=document.getElementById('chat-title-lbl');if(ct)ct.textContent=L.chatTitle||'Chat';
+  renderTypeGrid();
+}
+
+// ── THEME ──
+function setTheme(th){
+  document.documentElement.setAttribute('data-theme',th);
+  ['dark','light'].forEach(t=>{document.getElementById('th-'+t)?.classList.toggle('active',t===th);});
+  const cfg=S.cfg;cfg.theme=th;S.cfg=cfg;
+}
+
+// ── TYPE GRID ──
+const PLUGIN_TYPES=[
+  {id:'plugin',icon:'🔌',key:'plugin'},
+  {id:'extension',icon:'🌐',key:'extension'},
+  {id:'theme',icon:'🎨',key:'theme'},
+  {id:'widget',icon:'📦',key:'widget'},
+  {id:'seo',icon:'📊',key:'seo'},
+  {id:'humanizer',icon:'🤖',key:'humanizer'},
+];
+let selectedType='plugin';
+function renderTypeGrid(){
+  const L=T[curLang]||T.es;
+  const el=document.getElementById('type-grid');if(!el)return;
+  el.innerHTML=PLUGIN_TYPES.map(tp=>`
+    <div class="type-btn ${tp.id===selectedType?'selected':''}" onclick="selectType('${tp.id}')">
+      <span style="font-size:.9rem">${tp.icon}</span>
+      <span>${L.types?.[tp.key]||tp.key}</span>
+    </div>`).join('');
+}
+function selectType(id){selectedType=id;renderTypeGrid();playClick();}
+
+// ── AI ENGINE ──
+let curProvider='groq';
+async function callAI(prompt,system='You are Duvi, expert WordPress architect.'){
+  const cfg=S.cfg;
+  if(curProvider==='groq'){
+    const key=cfg.groqKey||'';
+    if(!key)throw new Error('No Groq API key. Configure in Settings.');
+    const model=cfg.groqModel||'llama-3.3-70b-versatile';
+    const msgs=[];
+    if(system)msgs.push({role:'system',content:system});
+    msgs.push({role:'user',content:prompt});
+    const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model,max_tokens:2048,messages:msgs}),signal:AbortSignal.timeout(30000)
+    });
+    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    return d.choices?.[0]?.message?.content||'';
+  } else {
+    const key=cfg.geminiKey||'';
+    if(!key)throw new Error('No Gemini API key. Configure in Settings.');
+    const model='gemini-2.0-flash';
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{role:'user',parts:[{text:(system?'SYSTEM: '+system+'\n\n':'')+prompt}]}]}),
+      signal:AbortSignal.timeout(30000)
+    });
+    const d=await r.json();if(d.error)throw new Error(d.error.message);
+    return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  }
+}
+function setProvider(p){
+  curProvider=p;
+  document.getElementById('prov-groq').classList.toggle('on',p==='groq');
+  document.getElementById('prov-gemini').classList.toggle('on',p==='gemini');
+  const cfg=S.cfg;cfg.provider=p;S.cfg=cfg;
+}
+
+// ── MAIN GENERATION ──
+let currentProject=null;
+async function generate(){
+  const prompt=document.getElementById('main-prompt').value.trim();
+  if(!prompt){toast('⚠️','Write a prompt first');return;}
+  setLoading(true);
+  try{
+    const L=T[curLang]||T.es;
+    const typeLabel=L.types?.[selectedType]||selectedType;
+    const sys=`You are "Duvi", expert WordPress architect. Task type: ${typeLabel}. Respond in ${curLang==='es'?'Spanish':curLang==='zh'?'Chinese':curLang==='ar'?'Arabic':curLang==='ru'?'Russian':curLang==='hi'?'Hindi':'English'}.
+    
+Generate a complete, production-ready WordPress solution. Return ONLY a JSON object (no markdown, no backticks):
+{
+  "name": "Plugin/solution name",
+  "description": "Short description",
+  "files": [{"name":"filename.php","language":"php","content":"full code","description":"file role"}],
+  "instructions": "Step-by-step installation guide",
+  "extraAnalysis": "SEO & performance analysis"
+}`;
+    const raw=await callAI(prompt,sys);
+    const clean=raw.replace(/```json|```/g,'').trim();
+    const data=JSON.parse(clean);
+    data.id=uid();data.timestamp=Date.now();
+    currentProject=data;
+    renderProject(data);
+    saveToHistory(data);
+    playSuccess();
+    toast('✅ '+data.name,'Generated successfully');
+  }catch(e){
+    showError(e.message);
+  }
+  setLoading(false);
+}
+async function humanize(){
+  const prompt=document.getElementById('main-prompt').value.trim();
+  if(!prompt){toast('⚠️','Enter article text first');return;}
+  setLoading(true);
+  try{
+    const res=await callAI(`Humanize this WordPress/SEO article. Remove AI patterns. Make it conversational and natural. Return JSON: {"name":"Humanized Article","description":"AI-humanized version","files":[{"name":"humanized_article.html","language":"html","content":"<html with green highlights on changed text>","description":"Humanized article"}],"instructions":"Review the highlighted changes","extraAnalysis":"Humanization quality analysis"}
+
+Article: ${prompt}`,'You are an expert content humanizer. Return ONLY valid JSON.');
+    const data=JSON.parse(res.replace(/```json|```/g,'').trim());
+    data.id=uid();data.timestamp=Date.now();
+    currentProject=data;renderProject(data);saveToHistory(data);
+    playSuccess();toast('🤖 Humanized','Article processed');
+  }catch(e){showError(e.message);}
+  setLoading(false);
+}
+function setLoading(on){
+  const ov=document.getElementById('loading-overlay');
+  if(ov)ov.style.display=on?'flex':'none';
+  const btn=document.getElementById('gen-btn');
+  if(btn){btn.disabled=on;btn.querySelector('span').textContent=on?(t('analyzing')||'Building...'):(t('invoke')||'Invoke');}
+}
+function showError(msg){
+  const bar=document.getElementById('error-bar');
+  const em=document.getElementById('error-msg');
+  if(bar&&em){em.textContent=msg;bar.style.display='flex';}
+}
+
+// ── PROJECT RENDER ──
+function renderProject(data){
+  document.getElementById('empty-state').style.display='none';
+  const cv=document.getElementById('code-viewer');
+  cv.style.display='flex';
+  document.getElementById('proj-name').textContent=data.name||'Project';
+  document.getElementById('proj-desc').textContent=data.description||'';
+  // File list
+  const fl=document.getElementById('file-list');
+  const files=data.files||[];
+  fl.innerHTML=files.map((f,i)=>`
+    <div class="file-item ${i===0?'active':''}" onclick="selectFile(${i})" id="fi-${i}">
+      ${fileIcon(f.name)}
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.name)}</span>
+    </div>`).join('');
+  if(files.length)selectFile(0);
+  // Guide
+  document.getElementById('guide-content').innerHTML=`<h2 style="color:var(--ac);font-family:var(--fn);margin-bottom:16px">📖 Installation Guide</h2><div style="white-space:pre-wrap">${esc(data.instructions||'')}</div>`;
+  // Analysis
+  document.getElementById('analysis-content').innerHTML=data.extraAnalysis?`<div style="white-space:pre-wrap">${esc(data.extraAnalysis)}</div>`:'<div style="color:var(--tx3)">No analysis available.</div>';
+  switchView('code');
+}
+function fileIcon(name){
+  if(name.endsWith('.php'))return'<span style="color:#c084fc;font-size:.65rem">PHP</span>';
+  if(name.endsWith('.js'))return'<span style="color:#fbbf24;font-size:.65rem">JS</span>';
+  if(name.endsWith('.css'))return'<span style="color:#60a5fa;font-size:.65rem">CSS</span>';
+  if(name.endsWith('.html'))return'<span style="color:#f97316;font-size:.65rem">HTML</span>';
+  if(name.endsWith('.json'))return'<span style="color:#34d399;font-size:.65rem">JSON</span>';
+  return'<span style="color:var(--tx3);font-size:.65rem">TXT</span>';
+}
+function selectFile(idx){
+  if(!currentProject)return;
+  const files=currentProject.files||[];
+  const file=files[idx];if(!file)return;
+  document.querySelectorAll('.file-item').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  document.getElementById('code-pre').textContent=file.content||'// empty';
+}
+function switchView(view){
+  ['code','guide','analysis'].forEach(v=>{
+    document.getElementById('view-'+v).style.display=v===view?'flex':'none';
+    document.getElementById('vtab-'+v)?.classList.toggle('active',v===view);
+  });
+  if(view==='code'){document.getElementById('view-code').style.display='flex';}
+}
+
+// ── DOWNLOAD ZIP ──
+async function downloadZip(){
+  if(!currentProject||!(currentProject.files||[]).length){toast('⚠️','No project to download');return;}
+  try{
+    // Simple multi-file download via concatenated blob download
+    // Build ZIP-like HTML with all files
+    const name=currentProject.name.replace(/[^a-z0-9]/gi,'_');
+    // Download each file individually
+    (currentProject.files||[]).forEach(f=>{
+      const blob=new Blob([f.content],{type:'text/plain'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download=f.name;a.click();
+      URL.revokeObjectURL(url);
+    });
+    toast('⬇ Downloaded',`${(currentProject.files||[]).length} file(s)`);
+  }catch(e){toast('❌ Error',e.message);}
+}
+function copyCurrentFile(){
+  const pre=document.getElementById('code-pre');
+  if(pre)navigator.clipboard?.writeText(pre.textContent||'').then(()=>toast('📋 Copied',''));
+}
+
+// ── ZIP UPLOAD ──
+function uploadZip(input){
+  const file=input?.files?.[0];if(!file)return;
+  const reader=new FileReader();
+  // Simulate reading ZIP — extract file list using filename
+  toast('📂 Loaded',file.name+' — Update mode active');
+  document.getElementById('update-badge').style.display='block';
+  currentProject={name:file.name.replace('.zip',''),description:'Loaded from ZIP for update.',files:[],instructions:'ZIP loaded. Use the prompt to request changes.',isUpdateMode:true};
+  input.value='';
+}
+function clearContext(){
+  currentProject=null;
+  document.getElementById('update-badge').style.display='none';
+  document.getElementById('empty-state').style.display='flex';
+  document.getElementById('code-viewer').style.display='none';
+  playClick();
+}
+
+// ── HISTORY ──
+function saveToHistory(data){
+  const hist=S.hist;
+  const filtered=hist.filter(h=>h.id!==data.id&&h.name!==data.name);
+  const updated=[data,...filtered].slice(0,10);
+  S.hist=updated;
+  renderHistory();
+}
+function renderHistory(){
+  const el=document.getElementById('hist-list');if(!el)return;
+  const hist=S.hist;
+  if(!hist.length){el.innerHTML='<div style="font-size:.62rem;color:var(--tx3);font-style:italic;padding:6px 0">No history yet.</div>';return;}
+  el.innerHTML=hist.map(h=>`
+    <div class="hist-item" onclick="loadFromHistory('${h.id}')">
+      <span style="font-size:.75rem">🔌</span>
+      <div style="flex:1;overflow:hidden">
+        <div style="font-size:.68rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(h.name)}</div>
+        <div style="font-size:.55rem;color:var(--tx3);font-family:var(--fm)">${h.timestamp?new Date(h.timestamp).toLocaleDateString():''}</div>
+      </div>
+      <button onclick="deleteHistory('${h.id}',event)" style="background:none;border:none;cursor:pointer;color:var(--tx3);padding:2px;font-size:.65rem">🗑</button>
+    </div>`).join('');
+}
+function loadFromHistory(id){
+  const h=S.hist.find(x=>x.id===id);if(!h)return;
+  currentProject=h;renderProject(h);playClick();
+}
+function deleteHistory(id,e){
+  e.stopPropagation();
+  S.hist=S.hist.filter(h=>h.id!==id);
+  renderHistory();
+}
+
+// ── CHAT ──
+let chatOpen=false;
+let _chatDragging=false,_chatOX=0,_chatOY=0;
+function toggleChat(){
+  chatOpen=!chatOpen;
+  document.getElementById('chat-panel').classList.toggle('open',chatOpen);
+  document.getElementById('chat-toggle-btn').classList.toggle('active',chatOpen);
+  if(chatOpen)document.getElementById('chat-input').focus();
+}
+function chatDragStart(e){
+  const p=document.getElementById('chat-panel');
+  _chatDragging=true;_chatOX=e.clientX-p.offsetLeft;_chatOY=e.clientY-p.offsetTop;
+  document.getElementById('chat-hd').classList.add('dragging');
+  const mm=ev=>{if(!_chatDragging)return;p.style.left=Math.max(0,ev.clientX-_chatOX)+'px';p.style.top=Math.max(0,ev.clientY-_chatOY)+'px';p.style.right='auto';p.style.bottom='auto';};
+  const mu=()=>{_chatDragging=false;document.getElementById('chat-hd').classList.remove('dragging');window.removeEventListener('mousemove',mm);window.removeEventListener('mouseup',mu);};
+  window.addEventListener('mousemove',mm);window.addEventListener('mouseup',mu);
+}
+let _chatHistory=[];
+async function sendChat(){
+  const inp=document.getElementById('chat-input');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  appendChat(msg,'user');
+  const typing=appendChat('…','bot');typing.style.opacity='.5';
+  _chatHistory.push({role:'user',content:msg});
+  const system=`You are Duvi, expert WordPress architect and SEO specialist. You help with WordPress plugins, SEO, AdSense, and performance. Respond in ${curLang==='es'?'Spanish':curLang==='zh'?'Chinese':curLang==='ar'?'Arabic':curLang==='ru'?'Russian':curLang==='hi'?'Hindi':'English'}. Be concise and professional.`;
+  try{
+    const res=await callAI(_chatHistory.map(m=>`${m.role==='user'?'User':'Duvi'}: ${m.content}`).join('\n\n'),system);
+    _chatHistory.push({role:'assistant',content:res});
+    typing.textContent=res;typing.style.opacity='1';
+  }catch(e){
+    typing.textContent='Error: '+e.message;typing.style.color='var(--rd)';typing.style.opacity='1';
+  }
+  document.getElementById('chat-msgs').scrollTop=999999;
+}
+function appendChat(text,role){
+  const ct=document.getElementById('chat-msgs');
+  const div=document.createElement('div');
+  div.className='cmsg '+role;div.textContent=text;
+  ct.appendChild(div);ct.scrollTop=999999;return div;
+}
+function startVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast('⚠️','Voice not supported');return;}
+  const r=new SR();r.lang=curLang==='es'?'es-ES':curLang==='zh'?'zh-CN':curLang==='ar'?'ar-SA':'en-US';
+  const btn=document.getElementById('voice-btn');btn.style.color='var(--rd)';
+  r.onresult=e=>{document.getElementById('chat-input').value=e.results[0][0].transcript;};
+  r.onend=()=>btn.style.color='';
+  r.start();
+}
+
+// ── POWER TOOLS ──
+function powerTool(tool){
+  const prompts={
+    headline:'Generate 5 viral, SEO-optimized headlines for this WordPress content.',
+    keywords:'Perform a keyword audit for this content and suggest improvements.',
+    grammar:'Review grammar and style. Suggest improvements.',
+    tone:'Rewrite this with a more persuasive, sales-oriented tone.'
+  };
+  if(!chatOpen)toggleChat();
+  const inp=document.getElementById('chat-input');
+  inp.value=prompts[tool]||'';
+  sendChat();
+  playClick();
+}
+
+// ── POMODORO ──
+let pomCfg={focus:25,short:5,long:15,sessions:4,auto:false};
+let pomLeft=25*60,pomActive=false,pomMode='focus',pomInterval=null,pomSess=0;
+function pomToggle(){
+  pomActive=!pomActive;
+  const btn=document.getElementById('pom-play-btn');
+  if(pomActive){
+    pomInterval=setInterval(()=>{
+      pomLeft--;
+      if(pomLeft<=0){
+        clearInterval(pomInterval);pomActive=false;
+        pomSess++;
+        playSuccess();
+        const isLong=(pomSess%pomCfg.sessions===0);
+        if(pomMode==='focus'){pomMode=isLong?'long':'short';pomLeft=(isLong?pomCfg.long:pomCfg.short)*60;toast('🍅 Break time!',isLong?'Long break':'Short break');}
+        else{pomMode='focus';pomLeft=pomCfg.focus*60;toast('🍅 Focus!','Session #'+(pomSess+1));}
+        document.getElementById('pom-mode-lbl').textContent=pomMode.toUpperCase();
+        pomUpdate();
+        if(pomCfg.auto)pomToggle();
+        return;
+      }
+      pomUpdate();
+    },1000);
+    btn.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  }else{
+    clearInterval(pomInterval);
+    btn.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+  }
+}
+function pomReset(){
+  clearInterval(pomInterval);pomActive=false;pomMode='focus';pomLeft=pomCfg.focus*60;pomSess=0;
+  pomUpdate();
+  document.getElementById('pom-mode-lbl').textContent='FOCUS';
+  document.getElementById('pom-play-btn').innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+}
+function pomUpdate(){
+  const m=String(Math.floor(pomLeft/60)).padStart(2,'0');
+  const s=String(pomLeft%60).padStart(2,'0');
+  document.getElementById('pom-display').textContent=m+':'+s;
+}
+function savePomConfig(){
+  pomCfg={
+    focus:parseInt(document.getElementById('pom-cfg-focus').value)||25,
+    short:parseInt(document.getElementById('pom-cfg-short').value)||5,
+    long:parseInt(document.getElementById('pom-cfg-long').value)||15,
+    sessions:parseInt(document.getElementById('pom-cfg-sessions').value)||4,
+    auto:document.getElementById('pom-auto').checked
+  };
+  const cfg=S.cfg;cfg.pomCfg=pomCfg;S.cfg=cfg;
+  pomReset();
+  const badge=document.getElementById('keys-badge');badge.style.display='inline';setTimeout(()=>badge.style.display='none',2000);
+  toast('🍅 Pomodoro','Settings saved');playSuccess();
+}
+
+// ── RSS ──
+const RSS_DEFAULTS=[
+  {id:'searchengineland',name:'SEJ',url:'https://searchengineland.com/feed',active:true},
+  {id:'moz',name:'Moz Blog',url:'https://moz.com/blog/feed',active:true},
+  {id:'tc',name:'TechCrunch',url:'https://techcrunch.com/feed/',active:true},
+  {id:'wptavern',name:'WP Tavern',url:'https://wptavern.com/feed',active:true},
+  {id:'hn',name:'HackerNews',url:'https://hacker-news',active:false},
+];
+let _rssItems=[],_rssLoaded=false;
+function toggleRSS(v){const cfg=S.cfg;cfg.rssEnabled=v;S.cfg=cfg;if(v&&!_rssLoaded)loadRSS();renderRSSPreview();}
+function renderRSSFeedsSettings(){
+  const el=document.getElementById('rss-feeds-settings');if(!el)return;
+  const feeds=S.rssFeeds;
+  el.innerHTML=feeds.map(f=>`
+    <div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--bo)">
+      <label class="toggle" style="transform:scale(.8)"><input type="checkbox" ${f.active?'checked':''} onchange="toggleFeed('${f.id}',this.checked)"><div class="tgl-track"><div class="tgl-knob"></div></div></label>
+      <div style="flex:1;overflow:hidden">
+        <div style="font-size:.68rem;font-weight:600;color:var(--tx)">${esc(f.name)}</div>
+        <div style="font-size:.5rem;color:var(--tx3);font-family:var(--fm);overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${esc(f.url)}</div>
+      </div>
+      <button onclick="removeFeed('${f.id}')" style="background:none;border:none;cursor:pointer;color:var(--tx3);font-size:.65rem">✕</button>
+    </div>`).join('');
+}
+function toggleFeed(id,v){const feeds=S.rssFeeds;const f=feeds.find(x=>x.id===id);if(f){f.active=v;S.rssFeeds=feeds;}_rssLoaded=false;}
+function removeFeed(id){S.rssFeeds=S.rssFeeds.filter(f=>f.id!==id);renderRSSFeedsSettings();_rssLoaded=false;}
+function addRSSFeed(){
+  const url=document.getElementById('rss-new-url').value.trim();
+  const name=document.getElementById('rss-new-name').value.trim();
+  if(!url||!url.startsWith('http')){toast('⚠️','Enter valid URL');return;}
+  const feeds=S.rssFeeds;feeds.push({id:uid(),name:name||new URL(url).hostname,url,active:true});S.rssFeeds=feeds;
+  document.getElementById('rss-new-url').value='';document.getElementById('rss-new-name').value='';
+  renderRSSFeedsSettings();_rssLoaded=false;toast('📡 Added','RSS feed added');
+}
+async function loadRSS(){
+  let items=[];
+  const subs=['wordpressdevelopment','SEO','bigseo','juststart'];
+  for(const sub of subs){
+    try{
+      const r=await fetch(`https://www.reddit.com/r/${sub}.json?limit=6&raw_json=1`,{signal:AbortSignal.timeout(5000)});
+      if(!r.ok)continue;
+      const d=await r.json();
+      (d.data?.children||[]).filter(p=>!p.data.stickied&&p.data.score>5).slice(0,4).forEach(p=>{
+        items.push({title:p.data.title,link:'https://reddit.com'+p.data.permalink,source:'r/'+p.data.subreddit,date:new Date(p.data.created_utc*1000).toISOString().slice(0,10)});
+      });
+    }catch{}
+    if(items.length>12)break;
+  }
+  if(!items.length){
+    try{
+      const ids=await(await fetch('https://hacker-news.firebaseio.com/v0/topstories.json',{signal:AbortSignal.timeout(4000)})).json();
+      const stories=await Promise.allSettled((ids||[]).slice(0,8).map(id=>fetch(`https://hacker-news.firebaseio.com/v0/item/${id}.json`,{signal:AbortSignal.timeout(3000)}).then(r=>r.json())));
+      stories.filter(s=>s.status==='fulfilled'&&s.value?.title).forEach(s=>{
+        items.push({title:s.value.title,link:s.value.url||`https://news.ycombinator.com/item?id=${s.value.id}`,source:'HackerNews',date:''});
+      });
+    }catch{}
+  }
+  _rssItems=items.slice(0,12);_rssLoaded=true;renderRSSPreview();
+}
+function renderRSSPreview(){
+  const el=document.getElementById('rss-preview-list');
+  const sec=document.getElementById('rss-sidebar-preview');
+  const cfg=S.cfg;
+  if(!el||!sec)return;
+  if(!cfg.rssEnabled){sec.style.display='none';return;}
+  sec.style.display='block';
+  if(!_rssItems.length){el.innerHTML='<div style="font-size:.6rem;color:var(--tx3)">Loading...</div>';if(!_rssLoaded)loadRSS();return;}
+  el.innerHTML=_rssItems.slice(0,4).map(it=>`
+    <div class="rss-item">
+      <a href="${esc(it.link)}" target="_blank">${esc(it.title.slice(0,60))}</a>
+      <div class="rss-meta">${esc(it.source)} ${it.date?'· '+it.date:''}</div>
+    </div>`).join('');
+}
+
+// ── CUSTOM BUTTONS ──
+let _cbShape='pill';
+function previewBtn(){
+  const title=document.getElementById('cb-title').value||'Button';
+  const emoji=document.getElementById('cb-emoji').value||'🔗';
+  const bg=document.getElementById('cb-bg').value;
+  const fg=document.getElementById('cb-fg').value;
+  const radii={pill:'100px',rect:'6px',circle:'50%'};
+  const prev=document.getElementById('cb-preview');
+  if(prev)prev.innerHTML=`<a href="#" style="display:inline-flex;align-items:center;gap:5px;background:${bg};color:${fg};padding:7px 14px;border-radius:${radii[_cbShape]};text-decoration:none;font-weight:700;font-size:.72rem;font-family:var(--fb)">${emoji} ${esc(title)}</a>`;
+}
+function autoFillBtn(){
+  const url=document.getElementById('cb-url').value.trim();
+  const t=document.getElementById('cb-title');
+  if(url&&!t.value){try{t.value=new URL(url).hostname;previewBtn();}catch{}}
+}
+function setCbShape(s){
+  _cbShape=s;
+  ['pill','rect','circle'].forEach(x=>document.getElementById('cb-shape-'+x)?.classList.toggle('on',x===s));
+  previewBtn();
+}
+function saveCustomBtn(){
+  const title=document.getElementById('cb-title').value.trim();
+  const url=document.getElementById('cb-url').value.trim();
+  if(!title||!url){toast('⚠️','Title and URL required');return;}
+  const btns=S.btns;
+  btns.push({id:uid(),title,url,emoji:document.getElementById('cb-emoji').value||'🔗',bg:document.getElementById('cb-bg').value,fg:document.getElementById('cb-fg').value,shape:_cbShape});
+  S.btns=btns;
+  closeModal('modal-custom-btn');
+  renderCustomBtns();
+  playSuccess();toast('🔗 Created',title);
+}
+function renderCustomBtns(){
+  const btns=S.btns;
+  const radii={pill:'100px',rect:'6px',circle:'50%'};
+  ['custom-btns-display','custom-btns-settings'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(!btns.length){el.innerHTML='<div style="font-size:.6rem;color:var(--tx3)">No buttons yet.</div>';return;}
+    el.innerHTML=btns.map(b=>`
+      <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px">
+        <a href="${esc(b.url)}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;background:${b.bg};color:${b.fg};padding:5px 10px;border-radius:${radii[b.shape]||'100px'};text-decoration:none;font-weight:700;font-size:.62rem;font-family:var(--fb)">${b.emoji||'🔗'} ${esc(b.title)}</a>
+        <button onclick="deleteBtn('${b.id}')" style="background:none;border:none;cursor:pointer;color:var(--tx3);font-size:.6rem">✕</button>
+      </div>`).join('');
+  });
+}
+function deleteBtn(id){S.btns=S.btns.filter(b=>b.id!==id);renderCustomBtns();toast('🗑 Deleted','Button removed');}
+function toggleCustomBtns(){
+  const cfg=S.cfg;cfg.customBtnsEnabled=!cfg.customBtnsEnabled;S.cfg=cfg;
+  document.getElementById('custom-btns-section').style.display=cfg.customBtnsEnabled?'block':'none';
+  document.getElementById('cbtns-toggle-btn').textContent=cfg.customBtnsEnabled?'🔗 Disable Link Buttons':'🔗 Enable Link Buttons';
+  toast('🔗 Link Buttons',cfg.customBtnsEnabled?'Enabled':'Disabled');
+}
+
+// ── ADMIN ──
+const MASTER_KEY='WPU-ADMIN-2026-JDV-X9K2';
+let adminUnlocked=false;
+function checkAdminKey(){
+  const val=document.getElementById('admin-key-inp').value.trim();
+  if(val===MASTER_KEY){activateAdmin();}
+  else{document.getElementById('admin-status').textContent='❌ Invalid key';document.getElementById('admin-status').style.color='var(--rd)';}
+}
+function activateAdmin(){
+  adminUnlocked=true;
+  document.getElementById('admin-controls').style.display='block';
+  document.getElementById('admin-status').textContent='✅ Admin active';
+  document.getElementById('admin-status').style.color='var(--gr)';
+  document.getElementById('admin-badge').classList.add('visible');
+  const cfg=S.cfg;cfg.admin=true;S.cfg=cfg;
+  toast('🔐 Admin','Access granted',2000);playSuccess();
+}
+function importAdminJSON(input){
+  const file=input?.files?.[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      const key=d.key||d.adminKey||d.masterKey||d.password||'';
+      if(key===MASTER_KEY){document.getElementById('admin-key-inp').value=key;checkAdminKey();}
+      else{document.getElementById('admin-status').textContent='❌ Invalid JSON key';}
+    }catch{document.getElementById('admin-status').textContent='❌ Invalid JSON';}
+  };
+  reader.readAsText(file);
+}
+function exportData(){
+  const data={hist:S.hist,btns:S.btns,rss:S.rssFeeds,cfg:S.cfg,exported:now8601(),version:'WPU-1.0'};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`wpu-backup-${now8601().slice(0,10)}.json`;a.click();
+  URL.revokeObjectURL(url);toast('📤 Exported','Backup downloaded');
+}
+function nukeAll(){
+  if(!confirm('⚠️ Delete ALL data?'))return;
+  ['wpu_cfg','wpu_hist','wpu_btns','wpu_rss'].forEach(k=>localStorage.removeItem(k));
+  toast('💣 Wiped','All data deleted');setTimeout(()=>location.reload(),1000);
+}
+
+// ── MODALS ──
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-ov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// ── MOBILE ──
+function toggleLeftPanel(){document.getElementById('left-panel').classList.toggle('open');}
+
+// ── SETTINGS INIT ──
+function initSettings(){
+  const cfg=S.cfg;
+  document.getElementById('cfg-groq').value=cfg.groqKey||'';
+  document.getElementById('cfg-gemini').value=cfg.geminiKey||'';
+  document.getElementById('cfg-groq-model').value=cfg.groqModel||'llama-3.3-70b-versatile';
+  document.getElementById('snd-toggle').checked=_soundOn;
+  document.getElementById('hey-toggle').checked=cfg.showHey!==false;
+  setProvider(cfg.provider||'groq');
+  // Pomodoro
+  if(cfg.pomCfg){
+    pomCfg={...pomCfg,...cfg.pomCfg};
+    document.getElementById('pom-cfg-focus').value=pomCfg.focus;
+    document.getElementById('pom-cfg-short').value=pomCfg.short;
+    document.getElementById('pom-cfg-long').value=pomCfg.long;
+    document.getElementById('pom-cfg-sessions').value=pomCfg.sessions;
+    document.getElementById('pom-auto').checked=!!pomCfg.auto;
+  }
+  document.getElementById('rss-toggle').checked=!!cfg.rssEnabled;
+  renderRSSFeedsSettings();
+  renderCustomBtns();
+  if(cfg.admin)activateAdmin();
+}
+function saveAPIKeys(){
+  const cfg=S.cfg;
+  cfg.groqKey=document.getElementById('cfg-groq').value.trim();
+  cfg.geminiKey=document.getElementById('cfg-gemini').value.trim();
+  cfg.groqModel=document.getElementById('cfg-groq-model').value;
+  S.cfg=cfg;
+  const b=document.getElementById('keys-badge');b.style.display='inline';setTimeout(()=>b.style.display='none',2500);
+  playSuccess();toast('💾 Saved','API keys stored');
+}
+function toggleHeyBtn(v){
+  const btn=document.getElementById('hey-btn');
+  if(btn)btn.style.display=v?'':'none';
+  const cfg=S.cfg;cfg.showHey=v;S.cfg=cfg;
+}
+
+// ── PWA ──
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  const btn=document.createElement('button');btn.className='tb-btn';btn.textContent='📲 Install';
+  btn.onclick=()=>{e.prompt();btn.remove();};
+  document.getElementById('topbar').appendChild(btn);
+});
+
+// ── BOOT ──
+(function boot(){
+  const cfg=S.cfg;
+  setTheme(cfg.theme||'dark');
+  curLang=cfg.lang||'es';
+  _soundOn=cfg.sound!==false;
+  document.getElementById('snd-toggle').checked=_soundOn;
+  setLang(curLang);
+  renderTypeGrid();
+  renderHistory();
+  renderCustomBtns();
+  if(cfg.rssEnabled)loadRSS();
+  if(cfg.admin)activateAdmin();
+  if(cfg.customBtnsEnabled){
+    document.getElementById('custom-btns-section').style.display='block';
+    document.getElementById('cbtns-toggle-btn').textContent='🔗 Disable Link Buttons';
+  }
+  if(cfg.showHey===false)document.getElementById('hey-btn').style.display='none';
+  pomLeft=pomCfg.focus*60;pomUpdate();
+  // Open settings modal on first run to configure API key
+  if(!cfg.groqKey&&!cfg.geminiKey){
+    setTimeout(()=>{openModal('modal-settings');toast('👋 Welcome','Configure your API key to start',4000);},800);
+  }
+  initSettings();
+})();
+</script>
+</body>
+</html>

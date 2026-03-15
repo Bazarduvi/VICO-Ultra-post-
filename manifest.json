@@ -1,0 +1,21 @@
+{
+  "name": "WP Ultrapost DUVI",
+  "short_name": "WP Ultrapost",
+  "description": "AI Architect for WordPress — plugins, themes, SEO & content humanizer",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape-primary",
+  "background_color": "#020617",
+  "theme_color": "#0ea5e9",
+  "lang": "es",
+  "categories": ["productivity", "developer", "utilities"],
+  "icons": [
+    { "src": "./icon.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "New Plugin", "url": "./index.html", "icons": [{"src":"./icon.png","sizes":"192x192"}] },
+    { "name": "Humanizer", "url": "./index.html", "icons": [{"src":"./icon.png","sizes":"192x192"}] }
+  ]
+}
